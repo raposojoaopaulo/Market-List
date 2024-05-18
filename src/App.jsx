@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { getFirestore, collection, addDoc } from "firebase/firestore";
+import app from './services/firebaseConfig'; 
+
+const db = getFirestore(app);
+
+async function addData() {
+  try {
+    const docRef = await addDoc(collection(db, "nomes_da_coleção"), {
+      chave: "valor",
+      outra_chave: "outro_valor"
+    });
+    console.log("Documento escrito com ID: ", docRef.id);
+  } catch (e) {
+    console.error("Erro ao adicionar documento: ", e);
+  }
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const handleAddData = () => {
+    addData(); 
+  };
+
 
   return (
     <>
       <div className='home'>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <div className="container">
+          <h1>Lista de compras</h1>
+          <div>
+            <button onClick={handleAddData}>Adicionar Item</button>
+          </div>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
 
 export default App
+
